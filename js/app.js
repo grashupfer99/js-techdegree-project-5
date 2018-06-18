@@ -7,7 +7,7 @@
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const employees = document.querySelector('.employees');
-let curProfile;
+let curProfile; 
 
 const formatBday = (bday) => {
     let newBday = bday.slice(0,10).split("-");
@@ -16,13 +16,13 @@ const formatBday = (bday) => {
 
 
 
-const renderDetails = (profile, num = 0) => {
+const renderDetails = (profile) => {
     if (overlay.children.length > 0) {
         overlay.removeChild(document.querySelector('.profile'));
     }
 
     const detailedProfile = `
-                <div class="profile" data-num="${num}">
+                <div class="profile">
                     <span class="close"><i class="fas fa-times"></i></span>
                     <div class="img">
                         <img src="${profile.picture.large}" alt="${capitalize(profile.name.first)} ${capitalize(profile.name.last)}">
@@ -73,11 +73,12 @@ employees.addEventListener('click', e => {
             e.target.parentNode.parentNode.getAttribute("data-index");
         
         let profile = db.results[getIndex];
+        curProfile = parseInt(getIndex);
         // console.log(getIndex);
         // console.log('----')
         // console.log(db.results[getIndex]);
         //console.log(e.target);
-        renderDetails(profile, getIndex);
+        renderDetails(profile);
 
         // if (e.target.id === 'prev' || e.target.className === 'fas fa-arrow-left'){
         //     console.log('prev');
@@ -122,8 +123,7 @@ overlay.addEventListener('click', e => {
       overlay.style.display = "none";
       modal.style.display = "none";
     }
-    let index = overlay.firstElementChild.getAttribute('data-num');
-    console.log('index: ' + index);
+    console.log("index: " + curProfile);
     // console.log(getIndex);
     // console.log('----')
     // console.log(db.results[getIndex]);
@@ -131,13 +131,19 @@ overlay.addEventListener('click', e => {
 
         if (e.target.id === 'prev' || e.target.className === 'fas fa-arrow-left'){
             console.log('prev');
-            let dat = db.results[index - 1];
+            if (curProfile === 0) {
+                curProfile = 12;
+            }
+            let dat = db.results[curProfile -= 1];
             renderDetails(dat);
 
         }
         if (e.target.id === 'next' || e.target.className === 'fas fa-arrow-right'){
             console.log('next');
-            let dat = db.results[index + 1];
+            if(curProfile === 11){
+                curProfile = -1;
+            }
+            let dat = db.results[curProfile += 1];
             renderDetails(dat);
         }
 });
