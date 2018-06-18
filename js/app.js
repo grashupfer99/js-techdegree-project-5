@@ -63,11 +63,6 @@ employees.addEventListener('click', e => {
         overlay.style.display = "block";
         modal.style.display = "block";
         
-        //console.log(overlay.children.length);
-        // Remove previous created element 
-        // if (overlay.children.length > 0){
-        //     overlay.removeChild(document.querySelector('.profile'));
-        // }
 
         let getIndex = e.target.getAttribute("data-index") ||
             e.target.parentNode.getAttribute("data-index") ||
@@ -80,40 +75,6 @@ employees.addEventListener('click', e => {
         // console.log(db.results[getIndex]);
         //console.log(e.target);
         renderDetails(profile);
-
-        // if (e.target.id === 'prev' || e.target.className === 'fas fa-arrow-left'){
-        //     console.log('prev');
-        // }
-        // if (e.target.id === 'next' || e.target.className === 'fas fa-arrow-right'){
-        //     console.log('next');
-        // }
-
-        // const detailedProfile = `
-        //         <div class="profile">
-        //             <span class="close"><i class="fas fa-times"></i></span>
-        //             <div class="img">
-        //                 <img src="${profile.picture.large}" alt="${capitalize(profile.name.first)} ${capitalize(profile.name.last)}">
-        //             </div>
-        //             <div class="details">
-        //                 <span class="name">${capitalize(profile.name.first)} ${capitalize(profile.name.last)}</span>
-        //                 <span>${profile.email}</span>
-        //                 <span>${profile.location.city}</span>
-        //                 <hr>
-        //                 <span>${profile.cell}</span>
-        //                 <span>${profile.location.street} 
-        //                                       ${profile.location.city} 
-        //                                       ${profile.location.state}
-        //                                       ${profile.location.postcode}</span>
-        //                 <span>birthday: ${formatBday(profile.dob.date)}</span>
-        //             </div>
-        //             <div class="pagination">
-        //                 <span id="prev"><i class="fas fa-arrow-left"></i></span>
-        //                 <span id="next"><i class="fas fa-arrow-right"></i></span>
-        //             </div>
-        //         </div>
-        //     `;
-        // overlay.insertAdjacentHTML("beforeend", detailedProfile);
-        
     }
     
 });
@@ -189,28 +150,14 @@ const fetchDataAW = async (url) => {
             `;
             employees.insertAdjacentHTML("beforeend", markup);
         });
-
-      
-        
         
     } catch(error){
         // what happends when there is an error
         console.log(`Error alert! ${error}`);
     }
 
-    // return fetch(url)
-    //     .then(checkStatus)
-    //     .then(res => res.json())
-    //     .catch(error => console.log(`Error... ${error}`));
 }
 
-// const checkStatus = (response) => {
-//     if (response.ok) {
-//         return Promise.resolve(response);
-//     } else {
-//         return Promise.reject(new Error(response.statusText));
-//     }
-// }
 let nat = ['au', 'ca', 'gb', 'nl', 'nz', 'us'];
 
 console.log("before");
@@ -229,7 +176,15 @@ console.log('------------');
 console.log(`https://randomuser.me/api/?nat=${nat[0]},${nat[1]}&results=12`);
 
 fetchDataAW(`https://randomuser.me/api/?nat=${nat[0]},${nat[1]}&results=12`);
-    // .then(data => {
-    //     console.log(data.results);
-    //     });
 
+// search component
+document.querySelectorAll('form')[0].addEventListener('submit', function(e) {
+    e.preventDefault();
+    const $searchQuery = $("#search").val().toUpperCase();
+    $('.employee').each( (i, item) => {
+        $(item).text().toUpperCase().includes($searchQuery) ? $(item).show() : $(item).hide();
+        //? $(".employee").show() : $(".employee").hide();
+        //console.log($(item).text().toUpperCase());
+    });
+    //console.log($('.name').text());
+});

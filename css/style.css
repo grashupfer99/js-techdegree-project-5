@@ -11,6 +11,18 @@ h1 {
     letter-spacing: 1.5px;
     text-align: center; }
 
+form {
+    padding: 10px 0; }
+    #search {
+        box-sizing: border-box;
+        border: 1px solid #4a4a4a;
+        padding: 7px 10px;
+        outline: none; }
+    #submit {
+        border: 1px solid #4a4a4a;
+        background: transparent;
+        padding: 7px 10px;
+        outline: none; }
 #container {
     max-width: 1320px;
     margin: 60px auto; }
@@ -124,7 +136,8 @@ h1 {
             color:#000;
             cursor: pointer; }
 
-.pagination span:hover {
+.pagination span:hover,
+#submit:hover {
     background: #000;
     color: #fff;
     transition: all 0.4s;
