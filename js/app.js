@@ -7,6 +7,7 @@
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const employees = document.querySelector('.employees');
+let curProfile;
 
 const formatBday = (bday) => {
     let newBday = bday.slice(0,10).split("-");
@@ -15,7 +16,7 @@ const formatBday = (bday) => {
 
 
 
-const renderDetails = (profile, num = 1) => {
+const renderDetails = (profile, num = 0) => {
     if (overlay.children.length > 0) {
         overlay.removeChild(document.querySelector('.profile'));
     }
@@ -121,8 +122,8 @@ overlay.addEventListener('click', e => {
       overlay.style.display = "none";
       modal.style.display = "none";
     }
-
-
+    let index = overlay.firstElementChild.getAttribute('data-num');
+    console.log('index: ' + index);
     // console.log(getIndex);
     // console.log('----')
     // console.log(db.results[getIndex]);
@@ -130,15 +131,13 @@ overlay.addEventListener('click', e => {
 
         if (e.target.id === 'prev' || e.target.className === 'fas fa-arrow-left'){
             console.log('prev');
-            const a = 10;
-            let dat = db.results[5];
+            let dat = db.results[index - 1];
             renderDetails(dat);
 
         }
         if (e.target.id === 'next' || e.target.className === 'fas fa-arrow-right'){
             console.log('next');
-            const b = 1
-            let dat = db.results[3];
+            let dat = db.results[index + 1];
             renderDetails(dat);
         }
 });
