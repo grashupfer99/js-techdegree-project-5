@@ -37,7 +37,11 @@ h1 {
         display: inline-block;
         vertical-align: middle; }
         .info span {
-            display: block; }
+            display: block;
+            width: 210px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis; }
         .info span:not(.email){
             text-transform: capitalize; }
         .name{
@@ -46,10 +50,7 @@ h1 {
             font-weight: bold;
             letter-spacing: 1.7px; }
         .email {
-            width: 200px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+
             font-size: 17px;
             color: #8a8f93;
             margin: 10px 0 7px; }

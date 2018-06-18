@@ -14,6 +14,7 @@ const formatBday = (bday) => {
     return `${newBday[2]}/${newBday[1]}/${newBday[0].slice(2,4)}`;
 }
 
+const nationalities = ['au','ca','gb','ir','nl','nz','us'];
 
 
 const renderDetails = (profile) => {
@@ -210,8 +211,24 @@ const fetchDataAW = async (url) => {
 //         return Promise.reject(new Error(response.statusText));
 //     }
 // }
+let nat = ['au', 'ca', 'gb', 'nl', 'nz', 'us'];
 
-fetchDataAW('https://randomuser.me/api/?results=12');
+console.log("before");
+console.log(nat);
+let i = nat.length, j, temp;
+while (--i > 0) {
+    j = Math.floor(Math.random() * (i + 1)); // Get random number ranging between 0 and i
+        temp = nat[j];
+        nat[j] = nat[i];
+        nat[i] = temp;
+}
+
+console.log('after');
+console.log(nat);
+console.log('------------');
+console.log(`https://randomuser.me/api/?nat=${nat[0]},${nat[1]}&results=12`);
+
+fetchDataAW(`https://randomuser.me/api/?nat=${nat[0]},${nat[1]}&results=12`);
     // .then(data => {
     //     console.log(data.results);
     //     });
