@@ -12,7 +12,8 @@ h1 {
     text-align: center; }
 
 form {
-    padding: 10px 0; }
+    padding: 10px 0;
+    text-align: center; }
     #search {
         box-sizing: border-box;
         border: 1px solid #4a4a4a;
@@ -21,7 +22,8 @@ form {
     #submit {
         border: 1px solid #4a4a4a;
         background: transparent;
-        padding: 7px 10px;
+        padding: 7px 15px;
+        margin-left: 5px;
         outline: none; }
 
 #loader{
@@ -39,7 +41,8 @@ form {
 .employees {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly; }
+    justify-content: space-evenly;
+ }
 
 .employee {
     border: 2px solid #dfdfdf;
@@ -92,7 +95,6 @@ form {
 .overlay {
     display: none;
     position: absolute;
-    width: 457px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -125,7 +127,7 @@ form {
             margin: 16px 0;
             font-size: 17px;
             color: #8a8f93; }
-        .details span:not(:nth-child(2)){
+        .details span:not(:nth-child(2)):not(:nth-child(3)){
             text-transform: capitalize; }
         .details span:last-child{
             margin-bottom: 30px; }
@@ -172,6 +174,8 @@ form {
 }
 
 @media (min-width: 768px){
+    .overlay{
+        width: 457px; }
     .employee {
         text-align: left; }
 }
@@ -182,7 +186,7 @@ form {
 }
 
 @media (min-width: 1280px){
-    h1 {
+    h1, form {
         text-align: left; }
     .employees {
         justify-content: space-between; }

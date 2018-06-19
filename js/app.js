@@ -1,7 +1,7 @@
 /*
 * Project name:         Use a Public API to Create an Employee Directory
 * Student name:         Alex Khant (http://github.com/grashupfer99)
-* Updated:              2018-06-17
+* Updated:              2018-06-19
 */
 
 // DOM strings
@@ -41,48 +41,6 @@ const clearLoader = () => {
     }
 }
 
-// Render modal window
-const renderDetails = (profile) => {
-    // Remove profile if already exists, otherwise create a new one 
-    if (overlay.children.length > 0) {
-        overlay.removeChild(document.querySelector('.profile'));
-    }
-
-    const detailedProfile = `
-                <div class="profile">
-                    <span class="close"><i class="fas fa-times"></i></span>
-                    <div class="img">
-                        <img src="${profile.picture.large}" alt="${capitalize(profile.name.first)} ${capitalize(profile.name.last)}">
-                    </div>
-                    <div class="details">
-                        <span class="name">${profile.name.first} ${profile.name.last}</span>
-                        <span>${profile.email}</span>
-                        <span>${profile.location.city}</span>
-                        <hr>
-                        <span>${profile.cell}</span>
-                        <span>${profile.location.street} 
-                                              ${profile.location.city} 
-                                              ${profile.location.state}
-                                              ${profile.location.postcode}</span>
-                        <span>birthday: ${formatBday(profile.dob.date)}</span>
-                    </div>
-                    <div class="pagination">
-                        <span id="prev"><i class="fas fa-arrow-left"></i></span>
-                        <span id="next"><i class="fas fa-arrow-right"></i></span>
-                    </div>
-                </div>
-            `;
-    // Append to the DOM
-    overlay.insertAdjacentHTML("beforeend", detailedProfile);
-}
-
-// Capitalize word
-const capitalize = (str) => {
-    const temp = str.toLowerCase().split(' ');
-    const res = temp.map((val) => val.replace(val.charAt(0), val.charAt(0).toUpperCase()));
-    return res.join(' ');
-}
-
 // Fetch data 
 const fetchDataAW = async (url) => {
     // Render loader before getting data from ajax
@@ -111,15 +69,57 @@ const fetchDataAW = async (url) => {
             `;
             employees.insertAdjacentHTML("beforeend", markup);
         });
-        // Run catch if error has occurred
+        // If error - run catch
     } catch (error) {
-        console.log(`Error alert! ${error}`);
+        console.log(`Error alert! ${alert(error)}`);
     }
 }
 
+// Render modal window
+const renderDetails = (profile) => {
+    // Remove profile if already exists, otherwise create a new one 
+    if (overlay.children.length > 0) {
+        overlay.removeChild(document.querySelector('.profile'));
+    }
+
+    const detailedProfile = `
+                <div class="profile">
+                    <span class="close"><i class="fas fa-times"></i></span>
+                    <div class="img">
+                        <img src="${profile.picture.large}" alt="${capitalize(profile.name.first)} ${capitalize(profile.name.last)}">
+                    </div>
+                    <div class="details">
+                        <span class="name">${profile.name.first} ${profile.name.last}</span>
+                        <span>${profile.login.username}</span>
+                        <span>${profile.email}</span>
+                        <span>${profile.location.city}</span>
+                        <hr>
+                        <span>${profile.cell}</span>
+                        <span>
+                            ${profile.location.street}, 
+                            ${profile.location.city}, 
+                            ${profile.location.state}, 
+                            ${profile.location.postcode}</span>
+                        <span>birthday: ${formatBday(profile.dob.date)}</span>
+                    </div>
+                    <div class="pagination">
+                        <span id="prev"><i class="fas fa-arrow-left"></i></span>
+                        <span id="next"><i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            `;
+    // Append to the DOM
+    overlay.insertAdjacentHTML("beforeend", detailedProfile);
+}
+
+// Capitalize word
+const capitalize = (str) => {
+    const temp = str.toLowerCase().split(' ');
+    const res = temp.map((val) => val.replace(val.charAt(0), val.charAt(0).toUpperCase()));
+    return res.join(' ');
+}
 
 /// EVENT LISTENERS ///
-
 // Form event handler
 document.querySelectorAll('form')[0].addEventListener('submit', function (e) {
     // Prevent default action
@@ -129,7 +129,8 @@ document.querySelectorAll('form')[0].addEventListener('submit', function (e) {
 search.addEventListener('keyup', function () {
     const searchQuery = search.value.toUpperCase();
     Array.from(employees.children).map(profile => {
-        if (profile.textContent.toUpperCase().includes(searchQuery)) {
+        // Filter by name
+        if (profile.querySelector('.name').textContent.toUpperCase().includes(searchQuery)) {
             profile.style.display = 'inline-block';
         } else {
             profile.style.display = "none";
@@ -189,7 +190,6 @@ window.onclick = (e) => {
     }
 }
 
-
 // Fisher-Yates Modern shuffle algorithm to get 2 random nationalities from the array 
 let i = natl.length, j, temp;
 while (--i > 0) {
@@ -198,9 +198,6 @@ while (--i > 0) {
         natl[j] = natl[i];
         natl[i] = temp;
 }
-// Fetch data 
+
+// Fetch data - get 12 random employees and 2 random nationalities 
 fetchDataAW(`https://randomuser.me/api/?nat=${natl[0]},${natl[1]}&results=12`);
-
-
-
-
