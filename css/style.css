@@ -15,15 +15,12 @@ form {
     padding: 10px 0;
     text-align: center; }
     #search {
+        width: 220px;
+        height: 35px;
+        font-size: 16px;
         box-sizing: border-box;
-        border: 1px solid #4a4a4a;
+        border: 1px solid #929292;
         padding: 7px 10px;
-        outline: none; }
-    #submit {
-        border: 1px solid #4a4a4a;
-        background: transparent;
-        padding: 7px 15px;
-        margin-left: 5px;
         outline: none; }
 
 #loader{
@@ -31,8 +28,7 @@ form {
     position: absolute;
     top:50%;
     left:50%;
-    transform: translate(-50%,-50%);
-}
+    transform: translate(-50%,-50%); }
 
 #container {
     max-width: 1320px;
@@ -41,8 +37,7 @@ form {
 .employees {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;
- }
+    justify-content: space-evenly; }
 
 .employee {
     border: 2px solid #dfdfdf;
@@ -147,12 +142,18 @@ form {
             color:#000;
             cursor: pointer; }
 
-.pagination span:hover,
-#submit:hover {
+.is-hidden{
+    display: none !important; }
+
+#search:focus {
+    border: 2px solid #404a51;
+    background: #f5f1f1;
+    transition: all 0.4s; }
+
+.pagination span:hover {
     background: #000;
     color: #fff;
-    transition: all 0.4s;
-}
+    transition: all 0.4s; }
 
 .employee:hover {
     border: 2px solid #000;

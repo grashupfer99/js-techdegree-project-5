@@ -9,7 +9,14 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const employees = document.querySelector('.employees');
 const container = document.getElementById('container');
-const search = document.getElementById("search");
+// Dynamically creating a search form
+const form = document.createElement('form');
+container.insertBefore(form, employees);
+const searchInput = document.createElement("input");
+searchInput.type = 'search';
+searchInput.id = 'search';
+searchInput.placeholder = 'Enter name or username';
+form.appendChild(searchInput);
 // Storing current profile's index to switch between profiles
 let curProfile; 
 // Storing profiles to use this data later in the project   
@@ -61,7 +68,7 @@ const fetchDataAW = async (url) => {
                         <img src="${profile.picture.large}" alt="${capitalize(profile.name.first)} ${capitalize(profile.name.last)}">
                     </div>
                     <div class="info">
-                        <span class="name">${profile.name.first} ${profile.name.last}</span>
+                        <span class="name">${profile.name.first} ${profile.name.last} <span class="is-hidden">${profile.login.username}</span></span>
                         <span class="email">${profile.email}</span>
                         <span class="location">${profile.location.city}</span>
                     </div>
@@ -121,13 +128,13 @@ const capitalize = (str) => {
 
 /// EVENT LISTENERS ///
 // Form event handler
-document.querySelectorAll('form')[0].addEventListener('submit', function (e) {
+form.addEventListener('submit', function (e) {
     // Prevent default action
     e.preventDefault();
 });
 // Handle search queries in real time as the user types
-search.addEventListener('keyup', function () {
-    const searchQuery = search.value.toUpperCase();
+searchInput.addEventListener('keyup', function () {
+    const searchQuery = searchInput.value.toUpperCase();
     Array.from(employees.children).map(profile => {
         // Filter by name
         if (profile.querySelector('.name').textContent.toUpperCase().includes(searchQuery)) {
