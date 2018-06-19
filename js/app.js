@@ -8,6 +8,7 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const employees = document.querySelector('.employees');
 let curProfile; 
+const container = document.getElementById('container');
 
 const formatBday = (bday) => {
     let newBday = bday.slice(0,10).split("-");
@@ -15,6 +16,23 @@ const formatBday = (bday) => {
 }
 
 const nationalities = ['au','ca','gb','ir','nl','nz','us'];
+
+const renderLoader = parentEl => {
+    const loader = `
+        <div class="fa-3x" id="loader">
+            <i class="fas fa-sync fa-spin"></i>
+        </div>
+    `;
+    parentEl.insertAdjacentHTML("beforeend", loader);
+}
+
+const clearLoader = () => {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.parentElement.removeChild(loader);
+    }
+}
+
 
 
 const renderDetails = (profile) => {
@@ -128,12 +146,15 @@ const capitalize = (str) => {
 let db =[];
 
 const fetchDataAW = async (url) => {
+    
+    renderLoader(container);
+    
     try{
         const result = await fetch(url);
         const data = await result.json();
         //console.log(data.results[0]);
         db = data;
-
+        clearLoader();
         const display = data.results.map((profile,index) => {
 
             const markup = `
@@ -180,11 +201,25 @@ fetchDataAW(`https://randomuser.me/api/?nat=${nat[0]},${nat[1]}&results=12`);
 // search component
 document.querySelectorAll('form')[0].addEventListener('submit', function(e) {
     e.preventDefault();
-    const $searchQuery = $("#search").val().toUpperCase();
-    $('.employee').each( (i, item) => {
-        $(item).text().toUpperCase().includes($searchQuery) ? $(item).show() : $(item).hide();
-        //? $(".employee").show() : $(".employee").hide();
-        //console.log($(item).text().toUpperCase());
-    });
+    // const $searchQuery = $("#search").val().toUpperCase();
+    // $('.employee').each( (i, item) => {
+    //     $(item).text().toUpperCase().includes($searchQuery) ? $(item).show() : $(item).hide();
+    //     //? $(".employee").show() : $(".employee").hide();
+    //     //console.log($(item).text().toUpperCase());
+    // });
     //console.log($('.name').text());
 });
+
+document.getElementById('search').addEventListener('keyup', function(){
+    const searchQuery = document.getElementById('search').value.toUpperCase();
+    const arr = Array.from(employees.children).map(profile => {
+        if(profile.textContent.toUpperCase().includes(searchQuery)){
+            profile.style.display = 'inline-block';
+        } else {
+            profile.style.display = "none";
+        }
+    });
+});
+
+
+
