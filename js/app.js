@@ -4,19 +4,26 @@
 * Updated:              2018-06-17
 */
 
+// DOM strings
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const employees = document.querySelector('.employees');
-let curProfile; 
 const container = document.getElementById('container');
+const search = document.getElementById("search");
+// Storing current profile's index to switch between profiles
+let curProfile; 
+// Storing profiles to use this data later in the project   
+let db = [];
+// Array of nationalities
+const natl = ['au', 'ca', 'gb', 'nl', 'nz', 'us'];
 
+// Format birthday date
 const formatBday = (bday) => {
     let newBday = bday.slice(0,10).split("-");
     return `${newBday[2]}/${newBday[1]}/${newBday[0].slice(2,4)}`;
 }
 
-const nationalities = ['au','ca','gb','ir','nl','nz','us'];
-
+// Render loader before getting data from ajax
 const renderLoader = parentEl => {
     const loader = `
         <div class="fa-3x" id="loader">
@@ -26,6 +33,7 @@ const renderLoader = parentEl => {
     parentEl.insertAdjacentHTML("beforeend", loader);
 }
 
+// Remove loader after getting data from ajax
 const clearLoader = () => {
     const loader = document.getElementById('loader');
     if (loader) {
@@ -33,9 +41,9 @@ const clearLoader = () => {
     }
 }
 
-
-
+// Render modal window
 const renderDetails = (profile) => {
+    // Remove profile if already exists, otherwise create a new one 
     if (overlay.children.length > 0) {
         overlay.removeChild(document.querySelector('.profile'));
     }
@@ -47,7 +55,7 @@ const renderDetails = (profile) => {
                         <img src="${profile.picture.large}" alt="${capitalize(profile.name.first)} ${capitalize(profile.name.last)}">
                     </div>
                     <div class="details">
-                        <span class="name">${capitalize(profile.name.first)} ${capitalize(profile.name.last)}</span>
+                        <span class="name">${profile.name.first} ${profile.name.last}</span>
                         <span>${profile.email}</span>
                         <span>${profile.location.city}</span>
                         <hr>
@@ -64,99 +72,31 @@ const renderDetails = (profile) => {
                     </div>
                 </div>
             `;
+    // Append to the DOM
     overlay.insertAdjacentHTML("beforeend", detailedProfile);
 }
 
-
-
-
-
-
-employees.addEventListener('click', e => {
-
-    if (e.target.className === "employee" || 
-        e.target.parentNode.className === "employee" ||
-        e.target.parentNode.parentNode.className === 'employee') {
-
-        overlay.style.display = "block";
-        modal.style.display = "block";
-        
-
-        let getIndex = e.target.getAttribute("data-index") ||
-            e.target.parentNode.getAttribute("data-index") ||
-            e.target.parentNode.parentNode.getAttribute("data-index");
-        
-        let profile = db.results[getIndex];
-        curProfile = parseInt(getIndex);
-        // console.log(getIndex);
-        // console.log('----')
-        // console.log(db.results[getIndex]);
-        //console.log(e.target);
-        renderDetails(profile);
-    }
-    
-});
-
-overlay.addEventListener('click', e => {
-    //console.log(e.target.className);
-    if (e.target.className === "close" || e.target.className === "fas fa-times") {
-      overlay.style.display = "none";
-      modal.style.display = "none";
-    }
-    console.log("index: " + curProfile);
-    // console.log(getIndex);
-    // console.log('----')
-    // console.log(db.results[getIndex]);
-    
-
-        if (e.target.id === 'prev' || e.target.className === 'fas fa-arrow-left'){
-            console.log('prev');
-            if (curProfile === 0) {
-                curProfile = 12;
-            }
-            let dat = db.results[curProfile -= 1];
-            renderDetails(dat);
-
-        }
-        if (e.target.id === 'next' || e.target.className === 'fas fa-arrow-right'){
-            console.log('next');
-            if(curProfile === 11){
-                curProfile = -1;
-            }
-            let dat = db.results[curProfile += 1];
-            renderDetails(dat);
-        }
-});
-
-
-window.onclick = (e) => {
-    if(e.target == modal){
-        modal.style.display = 'none';
-        overlay.style.display = 'none';
-    }
-}
-
+// Capitalize word
 const capitalize = (str) => {
     const temp = str.toLowerCase().split(' ');
     const res = temp.map((val) => val.replace(val.charAt(0), val.charAt(0).toUpperCase()));
     return res.join(' ');
 }
 
-//let markup;
-let db =[];
-
+// Fetch data 
 const fetchDataAW = async (url) => {
-    
+    // Render loader before getting data from ajax
     renderLoader(container);
-    
-    try{
+    // Execute this code, if error, then run catch
+    try {
         const result = await fetch(url);
         const data = await result.json();
-        //console.log(data.results[0]);
+        // store 12 profiles in db variable  
         db = data;
+        // Remove loader after getting data from ajax
         clearLoader();
-        const display = data.results.map((profile,index) => {
-
+        // Render employees
+        data.results.map((profile, index) => {
             const markup = `
                 <div class="employee" data-index="${index}">
                     <div class="picture">
@@ -171,55 +111,96 @@ const fetchDataAW = async (url) => {
             `;
             employees.insertAdjacentHTML("beforeend", markup);
         });
-        
-    } catch(error){
-        // what happends when there is an error
+        // Run catch if error has occurred
+    } catch (error) {
         console.log(`Error alert! ${error}`);
     }
-
 }
 
-let nat = ['au', 'ca', 'gb', 'nl', 'nz', 'us'];
 
-console.log("before");
-console.log(nat);
-let i = nat.length, j, temp;
-while (--i > 0) {
-    j = Math.floor(Math.random() * (i + 1)); // Get random number ranging between 0 and i
-        temp = nat[j];
-        nat[j] = nat[i];
-        nat[i] = temp;
-}
+/// EVENT LISTENERS ///
 
-console.log('after');
-console.log(nat);
-console.log('------------');
-console.log(`https://randomuser.me/api/?nat=${nat[0]},${nat[1]}&results=12`);
-
-fetchDataAW(`https://randomuser.me/api/?nat=${nat[0]},${nat[1]}&results=12`);
-
-// search component
-document.querySelectorAll('form')[0].addEventListener('submit', function(e) {
+// Form event handler
+document.querySelectorAll('form')[0].addEventListener('submit', function (e) {
+    // Prevent default action
     e.preventDefault();
-    // const $searchQuery = $("#search").val().toUpperCase();
-    // $('.employee').each( (i, item) => {
-    //     $(item).text().toUpperCase().includes($searchQuery) ? $(item).show() : $(item).hide();
-    //     //? $(".employee").show() : $(".employee").hide();
-    //     //console.log($(item).text().toUpperCase());
-    // });
-    //console.log($('.name').text());
 });
-
-document.getElementById('search').addEventListener('keyup', function(){
-    const searchQuery = document.getElementById('search').value.toUpperCase();
-    const arr = Array.from(employees.children).map(profile => {
-        if(profile.textContent.toUpperCase().includes(searchQuery)){
+// Handle search queries in real time as the user types
+search.addEventListener('keyup', function () {
+    const searchQuery = search.value.toUpperCase();
+    Array.from(employees.children).map(profile => {
+        if (profile.textContent.toUpperCase().includes(searchQuery)) {
             profile.style.display = 'inline-block';
         } else {
             profile.style.display = "none";
         }
     });
 });
+
+// Event handler for employees container
+employees.addEventListener('click', e => {
+    // Do stuff if clicked on elements which parent is '.employee'
+    if (e.target.className === "employee" || 
+        e.target.parentNode.className === "employee" ||
+        e.target.parentNode.parentNode.className === 'employee') {
+        // display detailed profile and modal
+        overlay.style.display = "block";
+        modal.style.display = "block";
+        // get each employee profile's index 
+        let getIndex = e.target.getAttribute("data-index") ||
+            e.target.parentNode.getAttribute("data-index") ||
+            e.target.parentNode.parentNode.getAttribute("data-index");
+        // Render clicked profile
+        let profile = db.results[getIndex];
+        renderDetails(profile);
+        // Get current profile's index to switch between profiles
+        curProfile = parseInt(getIndex);
+    }
+});
+
+// Switching between profles
+overlay.addEventListener('click', e => {
+    // Close the popup window 
+    if (e.target.className === "close" || e.target.className === "fas fa-times") {
+      overlay.style.display = "none";
+      modal.style.display = "none";
+    }
+    // Go to previous employee 
+    if (e.target.id === 'prev' || e.target.className === 'fas fa-arrow-left'){
+        // If reached 1st employee, start from the last
+        if (curProfile === 0) curProfile = 12;
+        let profile = db.results[curProfile -= 1];
+        renderDetails(profile);
+    }
+    // Next employee
+    if (e.target.id === 'next' || e.target.className === 'fas fa-arrow-right'){
+        // If reached the last employee on the list, start from 1st
+        if(curProfile === 11) curProfile = -1;
+        let profile = db.results[curProfile += 1];
+        renderDetails(profile);
+    }
+});
+
+// Close modal if clicked outside of it
+window.onclick = (e) => {
+    if(e.target == modal){
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+    }
+}
+
+
+// Fisher-Yates Modern shuffle algorithm to get 2 random nationalities from the array 
+let i = natl.length, j, temp;
+while (--i > 0) {
+    j = Math.floor(Math.random() * (i + 1));
+        temp = natl[j];
+        natl[j] = natl[i];
+        natl[i] = temp;
+}
+// Fetch data 
+fetchDataAW(`https://randomuser.me/api/?nat=${natl[0]},${natl[1]}&results=12`);
+
 
 
 
